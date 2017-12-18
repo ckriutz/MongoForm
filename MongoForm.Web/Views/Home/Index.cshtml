@@ -6,9 +6,29 @@
     <img src="~/images/logo.png" class="rounded float-left" alt="...">
     <h1>Mongo Form</h1>
     <p class="lead">A simple ASP.NET MVC form that writes the object into MongoDB.</p>
-    <p><a href="https://www.mongodb.com/" class="btn btn-primary btn-lg">Mongo</a></p>
+    <p>@Html.ActionLink("Take Survey", "Create", "Survey", null, new { @class = "btn btn-primary btn-lg" })</p>
 </div>
 
 <div class="row">
-    
-</div>
+    <div class="col-sm-2"></div>
+    <div class="col-sm-4">
+        @if (ViewBag.IsMongoLive == true)
+        {
+            <div class="alert alert-success" role="alert">
+                MongoDB is Currently Connected.
+            </div>
+        }
+        @if(ViewBag.IsMongoLive == false)
+        {
+            <div class="alert alert-danger" role="alert">
+                MongoDB is Not Connected!
+            </div>
+        }
+    </div>
+    <div class="col-sm-4">
+        <div class="alert alert-primary" role="alert">
+            There are @ViewBag.DocumentCount documents in the collection.
+        </div>
+    </div>
+    <div class="col-sm-2"></div>
+ </div>

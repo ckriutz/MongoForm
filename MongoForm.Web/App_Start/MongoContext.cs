@@ -11,7 +11,7 @@ namespace MongoForm.Web.App_Start
     public class MongoContext
     {
         private static MongoClient _client;
-        public IMongoDatabase Database;
+        public IMongoDatabase database;
         public IMongoCollection<Models.Survey> Collection;
 
         public MongoContext() 
@@ -21,10 +21,27 @@ namespace MongoForm.Web.App_Start
 
             _client = new MongoClient(MongoConnectionString);
 
-            //Database = _client.GetDatabase("foo");
+            database = _client.GetDatabase("surveys");
+        }
 
-            //var collection = Database.GetCollection<BsonDocument>("bar");
+        public bool IsMongoLive()
+        {
+            if(database != null)
+            {
+                bool isMongoLive = database.RunCommandAsync((Command<BsonDocument>)"{ping:1}").Wait(1000);
 
+                if(isMongoLive) { return true; };
+            }
+
+            return false;
+        }
+
+        public int GetCollectionCount(string collectionName)
+        {
+            var collection = database.GetCollection<BsonDocument>(collectionName);
+            var value = collection.CountAsync(new BsonDocument());
+
+            return int.Parse(value.Result.ToString());
         }
     }
 }

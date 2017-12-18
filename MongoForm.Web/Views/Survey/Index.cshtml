@@ -1,50 +1,36 @@
-﻿@model MongoForm.Web.Models.Survey
+﻿@model List<MongoForm.Web.Models.Survey> 
 @{
     ViewBag.Title = "Index";
 }
 
-<h2 style="margin-top: 15px; margin-bottom: 15px;">Simple Survey</h2>
+<div class="h3 text-center" style="margin-top:15px;">Survey Results</div>
+<p>@Html.ActionLink("Take Survey", "Create", "Survey", null, new { @class = "btn btn-primary" })</p>
 
-@using (Html.BeginForm("Index", "Survey", FormMethod.Post, new { @class = "form-group" }))
+@if (Model.Count > 0)
 {
-    <div class="form-group row">
-        @Html.Label("Your Name:", new { @class = "col-sm-4 col-form-label" })
-        <div class="col-sm-6">
-            @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
-        </div>
-    </div>
-
-    <div class="form-group row">
-        @Html.Label("How Satisified were you?", new { @class = "col-sm-4 col-form-label" })
-        <div class="col-sm-6">
-            @Html.DropDownListFor(m => m.Satisfaction, new List<SelectListItem>
-                   { new SelectListItem{Text="Not at all.", Value="0"},
-                     new SelectListItem{Text="A little.", Value="1"},
-                     new SelectListItem{Text="Some." },
-                     new SelectListItem{Text="Very much." } }, "Please select", new { @class = "form-control" })
-        </div>
-    </div>
-
-    <div class="form-group row">
-        @Html.Label("Did someone help you?", new { @class = "col-sm-4 col-form-label" })
-        <div class="col-sm-6">
-            <div class="form-check form-check-inline">
-                @Html.CheckBoxFor(model => model.IsWasHelped)
-            </div>
-        </div>
-    </div>
-    <div class="form-group row">
-        @Html.Label("Any additional Comments?", new { @class = "col-sm-4 col-form-label" })
-        <div class="col-sm-6">
-            @Html.TextAreaFor(model=> model.Comments, new { @class = "form-control", @rows = 3 })
-        </div>
-    </div>
-    <div class="form-group row">
-        <div class="col-sm-4">
-
-        </div>
-        <div class="col-md-6">
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </div>
-    </div>
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">Id</th>
+                <th scope="col">Name</th>
+                <th scope="col">Satisfaction</th>
+                <th scope="col">Was Helped</th>
+                <th scope="col">Comments</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (MongoForm.Web.Models.Survey item in Model)
+            {
+                <tr>
+                    <th>@Html.ActionLink(" ", "Delete", new { id = item.Id }, new { @class = "fa fa-times text-danger" })</th>
+                    <th scope="row">@item.Id</th>
+                    <td>@item.Name</td>
+                    <td>@item.Satisfaction</td>
+                    <td>@item.IsWasHelped</td>
+                    <td>@item.Comments</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 }

@@ -11,9 +11,6 @@ namespace MongoForm.Web.Models
     {
         public ObjectId Id { get; set; }
 
-        [BsonElement("SurveyId")]
-        public int SurveyId { get; set; }
-
         [BsonElement("Name")]
         public string Name { get; set; }
 

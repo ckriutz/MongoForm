@@ -11,6 +11,9 @@ namespace MongoForm.Web.Controllers
         public ActionResult Index()
         {
             App_Start.MongoContext mongoContext = new App_Start.MongoContext();
+
+            ViewBag.IsMongoLive = mongoContext.IsMongoLive();
+            ViewBag.DocumentCount = mongoContext.GetCollectionCount("Survey");
             return View();
         }
     }
