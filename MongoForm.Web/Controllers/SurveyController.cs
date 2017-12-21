@@ -12,12 +12,13 @@ namespace MongoForm.Web.Controllers
 {
     public class SurveyController : Controller
     {
-        private MongoDB.Driver.IMongoCollection<BsonDocument> _collection;
+        private MongoDB.Driver.IMongoCollection<Models.Survey> _collection;
+
         public SurveyController()
         {
             App_Start.MongoContext mongoContext = new App_Start.MongoContext();
 
-            _collection = mongoContext.database.GetCollection<BsonDocument>("Survey");
+            _collection = mongoContext.database.GetCollection<Models.Survey>("Survey");
         }
 
         // GET: Survey
@@ -35,17 +36,15 @@ namespace MongoForm.Web.Controllers
         [HttpPost]
         public ActionResult Create(Models.Survey survey)
         {
-            _collection.InsertOne(survey.ToBsonDocument());
+            _collection.InsertOne(survey);
             var list = GetAllSurveys();
             return View("Index", list);
         }
 
         public ActionResult Delete(string id)
         {
-            //deleting single record
-
-            var deleted = _collection.DeleteOneAsync(Builders<BsonDocument>.Filter.Eq("_id", 140));
-            var results = deleted.Result;
+            ObjectId oid = ObjectId.Parse(id);
+            var deleted = _collection.DeleteOne(d => d.Id == oid);
 
             return RedirectToAction("Index");
         }
@@ -53,14 +52,9 @@ namespace MongoForm.Web.Controllers
         private List<Models.Survey> GetAllSurveys()
         {
             List<Models.Survey> SurveysList = new List<Models.Survey>();
-            var docs = _collection.Find(new BsonDocument()).ToListAsync();
-            var results = docs.Result;
+            var docs = _collection.Find(FilterDefinition<Models.Survey>.Empty).ToListAsync();
+            SurveysList = docs.Result;
 
-            foreach(BsonDocument doc in results)
-            {
-                var surveyObj = BsonSerializer.Deserialize<Models.Survey>(doc);
-                SurveysList.Add(surveyObj);
-            }
             return SurveysList;
         }
     }

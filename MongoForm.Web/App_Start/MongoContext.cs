@@ -38,7 +38,7 @@ namespace MongoForm.Web.App_Start
 
         public int GetCollectionCount(string collectionName)
         {
-            var collection = database.GetCollection<BsonDocument>(collectionName);
+            var collection = database.GetCollection<Models.Survey>(collectionName);
             var value = collection.CountAsync(new BsonDocument());
 
             return int.Parse(value.Result.ToString());
