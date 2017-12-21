@@ -28,7 +28,8 @@ namespace MongoForm.Web.App_Start
         {
             if(database != null)
             {
-                bool isMongoLive = database.RunCommandAsync((Command<BsonDocument>)"{ping:1}").Wait(1000);
+                // Ideally, this will tell us if we can connect to the MongoDB.
+                bool isMongoLive = database.RunCommandAsync((Command<BsonDocument>)"{ping:1}").Wait(5000);
 
                 if(isMongoLive) { return true; };
             }
