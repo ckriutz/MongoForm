@@ -19,7 +19,10 @@ namespace MongoForm.Web.App_Start
             // Reading credentials from Web.config file
             var MongoConnectionString = ConfigurationManager.AppSettings["MongoConnectionString"];
 
-            _client = new MongoClient(MongoConnectionString);
+            MongoClientSettings settings = MongoClientSettings.FromUrl(new MongoUrl(MongoConnectionString));
+            settings.SslSettings = new SslSettings() { EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12 };
+
+            _client = new MongoClient(settings);
 
             database = _client.GetDatabase("surveys");
         }
